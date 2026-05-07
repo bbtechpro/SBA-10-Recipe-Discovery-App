@@ -1,18 +1,10 @@
-import { createContext, useState, useEffect } from 'react';
+import { createContext } from 'react';
+import { useLocalStorage } from '../hooks/useLocalStorage';
 
 export const FavContext = createContext();
 
 export const FavProvider = ({ children }) => {
-  // Initialize state with data from localStorage if it exists
-  const [favorites, setFavorites] = useState(() => {
-    const saved = localStorage.getItem('my_fav_recipes');
-    return saved ? JSON.parse(saved) : [];
-  });
-
-  // Keep localStorage in sync whenever favorites change
-  useEffect(() => {
-    localStorage.setItem('my_fav_recipes', JSON.stringify(favorites));
-  }, [favorites]);
+  const [favorites, setFavorites] = useLocalStorage('my_fav_recipes', []);
 
   const toggleFavorite = (recipe) => {
     setFavorites((prev) => {
