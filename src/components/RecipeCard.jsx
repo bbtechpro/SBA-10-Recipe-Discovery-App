@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { FavContext } from '../context/FavContext';
+import { FavContext } from './FavContext';
 
 const RecipeCard = ({ recipe }) => {
   const { toggleFavorite, isFavorite } = useContext(FavContext);
@@ -15,3 +15,5 @@ const RecipeCard = ({ recipe }) => {
     </div>
   );
 };
+
+export default RecipeCard;
