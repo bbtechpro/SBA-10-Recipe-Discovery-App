@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { fetchMealsByCategory } from '../api/mealdb';
+import { mockMealsByCategory } from '../api/mockMeals';
 import Spinner from '../components/Spinner';
 
 const CategoryMeals = () => {
@@ -10,23 +11,22 @@ const CategoryMeals = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchMeals = async () => {
-      try {
-        setLoading(true);
-        const response = await fetchMealsByCategory(categoryName);
-        if (response.data.meals) {
-          setMeals(response.data.meals);
-        } else {
-          setError('No meals found in this category');
-        }
-      } catch (err) {
-        setError('Failed to fetch meals');
-      } finally {
-        setLoading(false);
+    // Show mock data immediately for better UX
+    const mockData = mockMealsByCategory[categoryName] || [];
+    setMeals(mockData);
+    setLoading(false);
+    
+    // Try to fetch real data in background
+    fetchMealsByCategory(categoryName)
+    .then((response) => {
+      if (response.data && response.data.meals) {
+        setMeals(response.data.meals);
       }
-    };
-
-    fetchMeals();
+    })
+    .catch((err) => {
+      console.error('Error fetching meals:', err);
+      // Mock data is already set, so no action needed
+    }); 
   }, [categoryName]);
 
   if (loading) return <Spinner />;

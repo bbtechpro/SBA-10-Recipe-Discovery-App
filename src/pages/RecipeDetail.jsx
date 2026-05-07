@@ -66,7 +66,11 @@ const RecipeDetail = () => {
           <div className="flex justify-between items-start mb-4">
             <h1 className="text-3xl font-bold text-gray-800">{recipe.strMeal}</h1>
             <button
-              onClick={() => toggleFavorite(recipe)}
+              onClick={() => {
+                console.log('Favorite button clicked');
+                console.log('Recipe being favorited:', recipe);
+                toggleFavorite(recipe);
+              }}
               className={`px-4 py-2 rounded-lg font-medium transition-colors ${
                 isFavorite(recipe.idMeal)
                   ? 'bg-red-500 text-white hover:bg-red-600'

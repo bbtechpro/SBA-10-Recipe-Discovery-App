@@ -2,21 +2,29 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Spinner from "../components/Spinner";
 import { fetchCategories } from "../api/mealdb";
+import { mockCategories } from "../api/mockData";
 
 const Home = () => {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   
   useEffect(() => {
+    // Show mock data immediately for better UX
+    setCategories(mockCategories);
+    setLoading(false);
+    
+    // Try to fetch real data in background
     fetchCategories()
-    .then((res) => setCategories(res.data.categories))
-    .catch((err) => console.log(err))
-    .finally(() => {
-      setLoading(false);
+    .then((res) => {
+      if (res.data && res.data.categories) {
+        setCategories(res.data.categories);
+      }
+    })
+    .catch((err) => {
+      console.error('Error fetching categories:', err);
+      // Mock data is already set, so no action needed
     }); 
   }, []);
-
-  if (loading) return <Spinner />;
 
   return (
     <div className="max-w-6xl mx-auto p-3">
