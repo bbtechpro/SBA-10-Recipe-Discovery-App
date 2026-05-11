@@ -81,3 +81,84 @@ Instructions on how to install dependencies and run the project locally.
 Reflection: A short section in your README.md or in a separate REFLECTION.md file detailing:
 The most challenging part of the project for you.
 A brief explanation of a design decision you made (e.g., why you structured a hook a certain way, how you decided to manage a piece of state).
+
+# Recipe Discovery App
+
+## Overview
+
+A comprehensive Recipe Discovery application built with React that allows users to explore recipes from around the world. This single-page application demonstrates advanced React concepts including custom hooks, Context API for state management, and dynamic routing. Users can browse recipes by category, search for specific dishes, view detailed recipe information, and manage their personal list of favorite recipes.
+
+## Features
+
+- **Recipe Categories**: Browse 14 different recipe categories (Beef, Chicken, Dessert, Seafood, etc.)
+- **Category Filtering**: View all recipes within a specific category
+- **Recipe Details**: View complete recipe information including ingredients, measurements, and instructions
+- **Search Functionality**: Search for recipes by name with real-time results
+- **Favorites System**: Add/remove recipes to favorites with persistent localStorage storage
+- **Responsive Design**: Beautiful, mobile-friendly interface using Tailwind CSS
+- **Fast Loading**: Optimized performance with mock data fallbacks for instant loading
+- **Error Handling**: Graceful error handling with user-friendly messages
+
+## Technology Stack
+
+- **Frontend**: React 18 with Vite
+- **Routing**: React Router v7
+- **State Management**: Context API with custom hooks
+- **Styling**: Tailwind CSS v4
+- **API**: TheMealDB API with fallback mock data
+- **HTTP Client**: Axios
+- **Storage**: localStorage for favorites persistence
+
+## Application Structure
+
+```
+src/
+├── components/          # Reusable components
+│   ├── FavContext.jsx  # Favorites context provider
+│   ├── Header.jsx      # Navigation header with search
+│   ├── RecipeCard.jsx  # Recipe card component
+│   └── Spinner.jsx     # Loading spinner
+├── pages/              # Page components
+│   ├── Home.jsx        # Categories listing
+│   ├── CategoryMeals.jsx  # Category-specific recipes
+│   ├── RecipeDetail.jsx   # Individual recipe details
+│   ├── SearchResults.jsx  # Search results page
+│   └── Favorites.jsx      # User's favorite recipes
+├── hooks/              # Custom React hooks
+│   ├── useFetch.js     # Generic data fetching hook
+│   └── useLocalStorage.js  # localStorage synchronization hook
+├── api/                # API and mock data
+│   ├── mealdb.js       # API calls with fallbacks
+│   ├── mockData.js     # Mock categories
+│   ├── mockMeals.js    # Mock meals by category
+│   └── mockRecipeDetails.js  # Detailed recipe data
+└── App.jsx             # Main application component
+```
+
+## API Integration
+
+The application uses TheMealDB API (https://www.themealdb.com/api/json/v1/1/) with the following endpoints:
+
+- **Categories**: `/categories.php`
+- **Filter by Category**: `/filter.php?c={categoryName}`
+- **Recipe Details**: `/lookup.php?i={recipeId}`
+- **Search**: `/search.php?s={query}`
+
+**Fallback System**: When the API is unavailable or slow, the application seamlessly switches to comprehensive mock data, ensuring a smooth user experience.
+
+## Reflection
+
+### Most Challenging Part
+
+The most challenging part of this project was implementing a robust fallback system for API failures. The TheMealDB API frequently experienced timeouts and connectivity issues during development. I solved this by creating a comprehensive mock data system that provides realistic recipe information and implementing a timeout mechanism that gracefully falls back to mock data when the API doesn't respond within 3 seconds. This required careful data structure design to ensure the mock data matched the API response format exactly.
+
+### Design Decision: Immediate Loading with Background Updates
+
+A key design decision I made was to implement an "immediate loading" strategy. Instead of showing a spinner while waiting for API responses, the application displays mock data instantly and attempts to fetch real data in the background. This approach:
+
+1. **Improves User Experience**: Users see content immediately without waiting
+2. **Maintains Data Freshness**: Real data updates when available
+3. **Handles API Failures Gracefully**: The app remains functional even with complete API failure
+4. **Reduces Perceived Loading Time**: No spinner delays create a faster-feeling application
+
+This pattern is implemented in both the Home page (categories) and CategoryMeals page (recipes), ensuring consistent performance across the application. The useLocalStorage hook was also designed to be generic and reusable, automatically handling JSON serialization/deserialization and providing a clean API for any component that needs localStorage synchronization.
